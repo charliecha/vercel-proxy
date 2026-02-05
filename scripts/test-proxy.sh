@@ -3,8 +3,23 @@
 # Vercel Proxy Test Script
 # Usage: ./scripts/test-proxy.sh [HOST] [API_KEY]
 
+# Default host
 HOST=${1:-"http://localhost:3000"}
-API_KEY=${2:-"sk-1234"}
+
+# Get API Key from: 1. Argument, 2. Env variable, 3. .env file
+API_KEY=$2
+if [ -z "$API_KEY" ]; then
+    API_KEY=$PROXY_API_KEY
+fi
+if [ -z "$API_KEY" ] && [ -f ".env" ]; then
+    API_KEY=$(grep "^PROXY_API_KEY=" .env | cut -d '=' -f2-)
+fi
+
+if [ -z "$API_KEY" ]; then
+    echo -e "\033[0;31m❌ Error: API_KEY not found.\033[0m"
+    echo "Please provide it as an argument, set PROXY_API_KEY env var, or define it in .env"
+    exit 1
+fi
 
 GREEN='\033[0;32m'
 RED='\033[0;31m'

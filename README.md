@@ -68,12 +68,14 @@ npm run dev
 # 给予执行权限
 chmod +x scripts/test-proxy.sh
 
-# 运行测试 (默认测试 http://localhost:3000)
+# 运行测试 (自动从 .env 中读取 PROXY_API_KEY，默认测试 http://localhost:3000)
 ./scripts/test-proxy.sh
 
-# 测试特定域名
+# 测试特定域名和 Key
 ./scripts/test-proxy.sh https://your-domain.vercel.app your-api-key
 ```
+
+该脚本将自动尝试从当前目录的 `.env` 文件或环境变量 `PROXY_API_KEY` 中读取密钥。
 
 该脚本将测试：
 - 基础 GET 代理
