@@ -66,7 +66,12 @@ run_test "POST Proxy (HTTPBin)" \
 run_test "Google Shortcut" \
 "curl -s -H 'X-API-Key: $API_KEY' '$HOST/api/proxy/google/search?q=Vercel+Edge'"
 
-# 4. Auth Failure Test (Missing Key)
+# 4. Tavily Shortcut Test (using search endpoint)
+run_test "Tavily Shortcut" \
+"curl -s -X POST -H 'X-API-Key: $API_KEY' -H 'Content-Type: application/json' \
+-d '{\"query\":\"Vercel proxy\"}' '$HOST/api/proxy/tavily/search'"
+
+# 5. Auth Failure Test (Missing Key)
 echo -e "🧪 Testing: Auth Failure (Missing Key)..."
 status=$(curl -s -o /dev/null -w "%{http_code}" "$HOST/api/proxy?url=https://example.com")
 if [ "$status" == "401" ]; then

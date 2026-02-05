@@ -149,6 +149,34 @@ curl -X POST \
   "https://your-domain.vercel.app/api/proxy/openai/v1/chat/completions"
 ```
 
+#### 4️⃣ Tavily AI 代理
+
+**路径**: `/api/proxy/tavily/<路径>`
+
+**示例 (推荐：在请求体中带上 api_key)**：
+
+```bash
+curl -X POST \
+  -H "X-API-Key: your-proxy-key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "api_key": "tvly-your-actual-key",
+    "query": "Vercel proxy"
+  }' \
+  "https://your-domain.vercel.app/api/proxy/tavily/search"
+```
+
+**示例 (使用 Authorization Header)**：
+
+```bash
+curl -X POST \
+  -H "X-API-Key: your-proxy-key" \
+  -H "Authorization: Bearer tvly-your-actual-key" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "Vercel proxy"}' \
+  "https://your-domain.vercel.app/api/proxy/tavily/search"
+```
+
 ### JavaScript/TypeScript 示例
 
 ```typescript
