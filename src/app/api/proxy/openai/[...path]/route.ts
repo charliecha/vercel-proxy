@@ -50,17 +50,35 @@ async function handleOpenAIProxy(
 ): Promise<Response> {
     try {
         const { path } = await params;
-        const pathString = path ? path.join('/') : '';
+        let pathString = path ? path.join('/') : '';
+
+        // Extract configuration from headers or query params
+        const baseUrl = request.headers.get('x-base-url') || request.nextUrl.searchParams.get('baseurl') || OPENAI_BASE_URL;
+        const apiVersion = request.headers.get('x-api-version') || request.nextUrl.searchParams.get('api-version');
+        const deployment = request.headers.get('x-deployment');
+
+        // Automatic Azure Path Transformation
+        // If it's an Azure URL and a deployment is specified, and path is OpenAI style (v1/...)
+        if (baseUrl.includes('.openai.azure.com') && deployment && pathString.startsWith('v1/')) {
+            pathString = `openai/deployments/${deployment}/${pathString.replace('v1/', '')}`;
+        }
 
         // Build target URL
-        const targetUrl = new URL(`${OPENAI_BASE_URL}/${pathString}`);
+        const targetUrl = new URL(`${baseUrl}/${pathString}`);
 
-        // Forward query parameters
+        // Forward query parameters (excluding 'baseurl' and 'api-version' if they were used as config)
         request.nextUrl.searchParams.forEach((value, key) => {
-            targetUrl.searchParams.set(key, value);
+            if (key !== 'baseurl' && key !== 'api-version') {
+                targetUrl.searchParams.set(key, value);
+            }
         });
 
-        // Forward headers (especially Authorization for OpenAI API)
+        // Add api-version back if it was found in headers/params
+        if (apiVersion) {
+            targetUrl.searchParams.set('api-version', apiVersion);
+        }
+
+        // Forward headers
         const headers = forwardHeaders(request);
 
         // Prepare fetch options

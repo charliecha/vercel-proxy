@@ -71,7 +71,18 @@ run_test "Tavily Shortcut" \
 "curl -s -X POST -H 'X-API-Key: $API_KEY' -H 'Content-Type: application/json' \
 -d '{\"query\":\"Vercel proxy\"}' '$HOST/api/proxy/tavily/search'"
 
-# 5. Auth Failure Test (Missing Key)
+# 5. Azure OpenAI Proxy (via OpenAI endpoint + baseurl)
+# This is a structural test, it will likely return an error from Azure if keys are missing or endpoint is invalid.
+# To run this, uncomment the lines below and replace placeholders.
+# run_test "Azure OpenAI Proxy (via OpenAI endpoint + baseurl)" \
+# "curl -s -X POST \
+#   -H 'X-API-Key: $API_KEY' \
+#   -H 'api-key: YOUR_AZURE_KEY' \
+#   -H 'Content-Type: application/json' \
+#   -d '{\"messages\":[{\"role\":\"user\",\"content\":\"Hi\"}]}' \
+#   '$HOST/api/proxy/openai/openai/deployments/gpt-4/chat/completions?api-version=2024-02-01&baseurl=https://your-resource.openai.azure.com'"
+
+# 6. Auth Failure Test (Missing Key)
 echo -e "🧪 Testing: Auth Failure (Missing Key)..."
 status=$(curl -s -o /dev/null -w "%{http_code}" "$HOST/api/proxy?url=https://example.com")
 if [ "$status" == "401" ]; then

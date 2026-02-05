@@ -147,6 +147,18 @@ curl -X POST \
     "stream": true
   }' \
   "https://your-domain.vercel.app/api/proxy/openai/v1/chat/completions"
+
+# Azure OpenAI 示例 (推荐：使用 Header 配置)
+# 这样你可以保持 URL 路径为标准的 OpenAI 格式 (v1/...)
+curl -X POST \
+  -H "X-API-Key: your-proxy-key" \
+  -H "api-key: your-azure-api-key" \
+  -H "x-base-url: https://your-resource.openai.azure.com" \
+  -H "x-api-version: 2024-02-01" \
+  -H "x-deployment: gpt-4" \
+  -H "Content-Type: application/json" \
+  -d '{"messages":[{"role":"user","content":"Hi"}]}' \
+  "https://your-domain.vercel.app/api/proxy/openai/v1/chat/completions"
 ```
 
 #### 4️⃣ Tavily AI 代理
